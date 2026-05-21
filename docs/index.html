@@ -1,43 +1,91 @@
 <!doctype html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Unitree A1 Sanitized Showcase</title>
+  <title>Unitree A1 仿真控制项目展示</title>
   <style>
-    body { margin: 0; font-family: Arial, sans-serif; color: #18202a; background: #f5f7fb; }
-    main { max-width: 920px; margin: 0 auto; padding: 40px 22px; }
-    h1 { font-size: 34px; margin: 0 0 12px; }
-    h2 { margin-top: 28px; }
-    .panel { background: white; border: 1px solid #d8dee8; border-radius: 8px; padding: 18px; }
-    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+    :root {
+      --ink: #18202a;
+      --muted: #516070;
+      --line: #d8dee8;
+      --panel: #ffffff;
+      --bg: #f5f7fb;
+      --accent: #1769aa;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: Arial, "Microsoft YaHei", sans-serif; color: var(--ink); background: var(--bg); }
+    main { max-width: 1040px; margin: 0 auto; padding: 42px 22px 56px; }
+    h1 { font-size: 36px; margin: 0 0 10px; letter-spacing: 0; }
+    h2 { margin-top: 30px; font-size: 22px; }
+    p { line-height: 1.7; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .hero, .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 20px; }
+    .hero { display: grid; gap: 14px; }
+    .subtitle { color: var(--muted); font-size: 16px; margin: 0; }
+    .actions { display: flex; flex-wrap: wrap; gap: 10px; }
+    .button { border: 1px solid var(--accent); border-radius: 6px; padding: 9px 12px; color: var(--accent); background: #eef6fc; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; }
+    .tagrow { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .tag { background: #eef3f8; border: 1px solid var(--line); border-radius: 999px; padding: 6px 10px; color: #334155; }
+    table { width: 100%; border-collapse: collapse; background: #fff; }
+    th, td { border: 1px solid var(--line); padding: 10px; text-align: left; vertical-align: top; }
+    th { background: #e9f1f8; }
     code { background: #eef3f8; padding: 2px 5px; border-radius: 4px; }
-    a { color: #1769aa; }
   </style>
 </head>
 <body>
   <main>
-    <h1>Unitree A1 Robotics Simulation Control Showcase</h1>
-    <p class="panel">A sanitized, runnable demo repository for explaining a Unitree A1 simulation-control analysis pipeline. All metrics, logs, and figures are synthetic demo artifacts.</p>
+    <section class="hero">
+      <h1>Unitree A1 仿真控制项目展示</h1>
+      <p class="subtitle">一个脱敏、可运行、面向简历展示的机器人仿真控制分析仓库：用合成日志复刻日志解析、指标计算、MPC 风格诊断和图表生成流程。</p>
+      <div class="actions">
+        <a class="button" href="https://github.com/zihanshen29/robot-a1-showcase">查看 GitHub 仓库</a>
+        <a class="button" href="./project_overview.md">项目说明</a>
+        <a class="button" href="./interview_talking_points.md">面试讲解稿</a>
+      </div>
+    </section>
 
-    <h2>Pipeline</h2>
+    <h2>这个页面展示什么</h2>
     <div class="grid">
-      <div class="panel"><strong>1. Synthetic logs</strong><br>Generate deterministic 600-step Unitree A1 demo CSV files.</div>
-      <div class="panel"><strong>2. Parser</strong><br>Validate required fields and model naming.</div>
-      <div class="panel"><strong>3. Metrics</strong><br>Compute tracking, base-height, MPC, force, contact, and cost summaries.</div>
-      <div class="panel"><strong>4. Figures</strong><br>Create demo plots for interview discussion.</div>
+      <div class="panel"><strong>合成日志</strong><br>生成 600 step 的 Unitree A1 demo CSV，用于展示数据接口和状态字段设计。</div>
+      <div class="panel"><strong>解析与校验</strong><br>对 CSV 字段做 schema 检查，缺字段时给出清晰错误。</div>
+      <div class="panel"><strong>指标计算</strong><br>计算前向位移、速度跟踪误差、姿态、支撑力、接触占空比、MPC accept/reject 和 cost trend。</div>
+      <div class="panel"><strong>可视化</strong><br>生成面试可讲的 demo/synthetic 图表，不包含真实私有实验数据。</div>
     </div>
 
-    <h2>Run</h2>
+    <h2>项目状态矩阵</h2>
+    <table>
+      <tr><th>模块</th><th>公开展示状态</th><th>边界说明</th></tr>
+      <tr><td>Unitree A1 数据接口</td><td>已用 synthetic CSV 展示</td><td>不是真实机器人遥测</td></tr>
+      <tr><td>日志解析与指标</td><td>可运行，有测试覆盖</td><td>不是私有日志格式解析器</td></tr>
+      <tr><td>MPC 风格诊断</td><td>展示 accept/reject、cost、support force 风格字段</td><td>不是生产 MPC 求解器</td></tr>
+      <tr><td>短时域 600 steps 分析</td><td>用于展示分析流程</td><td>不声明真实实验结论</td></tr>
+      <tr><td>长时域鲁棒性</td><td>作为限制说明</td><td>不宣称已解决</td></tr>
+      <tr><td>真实机器人部署</td><td>不在公开 demo 范围</td><td>无硬件部署声明</td></tr>
+    </table>
+
+    <h2>本地运行</h2>
     <div class="panel">
-      <code>pip install -r requirements.txt</code><br>
-      <code>python scripts/run_demo_pipeline.py</code><br>
-      <code>pytest</code>
+      <p><code>pip install -r requirements.txt</code></p>
+      <p><code>python scripts/run_demo_pipeline.py</code></p>
+      <p><code>pytest</code></p>
     </div>
 
-    <h2>Boundary</h2>
-    <p>This repository is not the original non-public project. It contains no real robot telemetry, no protected source code, no checkpoints, and no hardware validation claim.</p>
+    <h2>技术栈</h2>
+    <div class="tagrow">
+      <span class="tag">Python</span>
+      <span class="tag">pandas</span>
+      <span class="tag">NumPy</span>
+      <span class="tag">matplotlib</span>
+      <span class="tag">pytest</span>
+      <span class="tag">MPC diagnostics</span>
+      <span class="tag">Unitree A1</span>
+    </div>
+
+    <h2>合规边界</h2>
+    <p>该仓库是 sanitized/demo showcase，不是原始私有项目。仓库不包含真实机器人日志、checkpoint、受保护源码、内部路径或硬件验证结论。所有图表和指标均来自合成 demo 数据。</p>
   </main>
 </body>
 </html>
-
