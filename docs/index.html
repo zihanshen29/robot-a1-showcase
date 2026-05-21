@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Unitree A1 Sanitized Showcase</title>
+  <style>
+    body { margin: 0; font-family: Arial, sans-serif; color: #18202a; background: #f5f7fb; }
+    main { max-width: 920px; margin: 0 auto; padding: 40px 22px; }
+    h1 { font-size: 34px; margin: 0 0 12px; }
+    h2 { margin-top: 28px; }
+    .panel { background: white; border: 1px solid #d8dee8; border-radius: 8px; padding: 18px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+    code { background: #eef3f8; padding: 2px 5px; border-radius: 4px; }
+    a { color: #1769aa; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Unitree A1 Robotics Simulation Control Showcase</h1>
+    <p class="panel">A sanitized, runnable demo repository for explaining a Unitree A1 simulation-control analysis pipeline. All metrics, logs, and figures are synthetic demo artifacts.</p>
+
+    <h2>Pipeline</h2>
+    <div class="grid">
+      <div class="panel"><strong>1. Synthetic logs</strong><br>Generate deterministic 600-step Unitree A1 demo CSV files.</div>
+      <div class="panel"><strong>2. Parser</strong><br>Validate required fields and model naming.</div>
+      <div class="panel"><strong>3. Metrics</strong><br>Compute tracking, base-height, MPC, force, contact, and cost summaries.</div>
+      <div class="panel"><strong>4. Figures</strong><br>Create demo plots for interview discussion.</div>
+    </div>
+
+    <h2>Run</h2>
+    <div class="panel">
+      <code>pip install -r requirements.txt</code><br>
+      <code>python scripts/run_demo_pipeline.py</code><br>
+      <code>pytest</code>
+    </div>
+
+    <h2>Boundary</h2>
+    <p>This repository is not the original non-public project. It contains no real robot telemetry, no protected source code, no checkpoints, and no hardware validation claim.</p>
+  </main>
+</body>
+</html>
+
