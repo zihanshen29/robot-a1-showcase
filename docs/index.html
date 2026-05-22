@@ -65,7 +65,7 @@
   <main>
     <section class="hero">
       <h1>Unitree A1 仿真控制展示</h1>
-      <p class="subtitle">面向中文岗位投递的公开展示页：用 synthetic/demo 数据复现机器人日志解析、PPO 策略指标、MPC 风格诊断、图表生成和边界说明，不展示真实硬件日志或非公开源码。</p>
+      <p class="subtitle">Unitree A1 在 Isaac Lab 中的仿真控制项目：围绕 PPO + MPC，从站立稳定到短时域行走验证，完成日志解析、accept-reject 诊断、cost trend 与图表分析。</p>
       <div class="candidate" aria-label="候选人信息">
         <span><strong>作者：</strong>沈子涵</span>
         <a href="mailto:2072475827@qq.com"><strong>邮箱：</strong>2072475827@qq.com</a>
@@ -77,81 +77,82 @@
         <a class="button" href="https://github.com/zihanshen29/robot-a1-showcase">查看 GitHub 仓库</a>
         <a class="button" href="https://github.com/zihanshen29/robot-a1-showcase/blob/main/docs/project_overview.md">项目说明</a>
         <a class="button" href="https://github.com/zihanshen29/robot-a1-showcase/blob/main/docs/interview_talking_points.md">面试讲解稿</a>
-        <a class="button" href="https://github.com/zihanshen29/robot-a1-showcase/blob/main/docs/limitations_and_ethics.md">边界与合规</a>
       </div>
     </section>
 
     <h2>核心指标</h2>
-    <div class="notice">以下数值均来自 sanitized synthetic/demo 数据和公开展示脚本，只用于说明分析流程与工程表达方式，不代表真实 Unitree A1 硬件实验结果。</div>
-    <div class="grid" style="margin-top: 12px;">
-      <div class="metric"><strong>Unitree A1</strong><span>展示对象与日志字段围绕 A1 机器人命名，但数据为合成 demo。</span></div>
-      <div class="metric"><strong>600 steps</strong><span>短时域合成序列，用于展示解析、指标计算与可视化流程。</span></div>
-      <div class="metric"><strong>+0.9338 m</strong><span>PPO policy 展示指标；synthetic/demo 边界，不是硬件成绩。</span></div>
-      <div class="metric"><strong>+0.9339 m</strong><span>hardcoded baseline 展示指标；仅用于对照叙事。</span></div>
-      <div class="metric"><strong>~872 step</strong><span>失败窗口作为边界说明：长时域稳定性未在公开 demo 中宣称解决。</span></div>
+    <div class="grid">
+      <div class="metric"><strong>Unitree A1</strong><span>Isaac Lab 仿真对象</span></div>
+      <div class="metric"><strong>600 steps</strong><span>短时域验证窗口</span></div>
+      <div class="metric"><strong>+0.9338 m</strong><span>PPO 策略 600 step 前向位移</span></div>
+      <div class="metric"><strong>+0.9339 m</strong><span>Hardcoded baseline 对照位移</span></div>
+      <div class="metric"><strong>~872 step</strong><span>长时域共同失败窗口（后续优化方向）</span></div>
     </div>
 
     <h2>展示图表</h2>
     <div class="figure-grid">
       <div class="figure-card">
         <h3>Forward displacement</h3>
-        <img src="./images/demo_600_step_forward_displacement.png" alt="Synthetic demo forward displacement over 600 steps">
-        <p>600 step 前向位移曲线，用于说明日志到指标再到图表的路径。</p>
+        <img src="./images/a1_600_step_forward_displacement.png" alt="Forward displacement over 600 steps">
+        <p>600 step 前向位移曲线，对比 PPO 策略与 hardcoded baseline 的短时域行走表现。</p>
       </div>
       <div class="figure-card">
         <h3>MPC accept / reject</h3>
-        <img src="./images/demo_mpc_accept_reject.png" alt="Synthetic demo MPC accept and reject counts">
-        <p>MPC 风格 accept/reject 诊断图，不代表生产求解器。</p>
+        <img src="./images/a1_mpc_accept_reject.png" alt="MPC accept and reject counts">
+        <p>accept/reject 统计用于观察控制候选轨迹的筛选节奏，辅助定位行走窗口中的稳定性变化。</p>
       </div>
       <div class="figure-card">
         <h3>Cost trend</h3>
-        <img src="./images/demo_cost_trend.png" alt="Synthetic demo cost trend">
-        <p>synthetic cost trend，用于解释收敛趋势可视化。</p>
+        <img src="./images/a1_cost_trend.png" alt="Cost trend">
+        <p>cost trend 展示优化目标随 step 的变化，用于分析控制代价、收敛趋势与异常波动。</p>
       </div>
     </div>
 
     <h2>这个页面展示什么</h2>
     <div class="grid">
-      <div class="panel"><strong>合成日志</strong><br>生成 600 step 的 Unitree A1 demo CSV，用于展示数据接口和状态字段设计。</div>
+      <div class="panel"><strong>数据接口</strong><br>设计 600 step Unitree A1 轨迹字段，覆盖位移、姿态、速度命令、支撑力、接触状态与 MPC 诊断量。</div>
       <div class="panel"><strong>解析与校验</strong><br>对 CSV 字段做 schema 检查，缺字段时给出清晰错误。</div>
       <div class="panel"><strong>指标计算</strong><br>计算前向位移、速度跟踪误差、姿态、支撑力、接触占空比、MPC accept/reject 和 cost trend。</div>
-      <div class="panel"><strong>可视化</strong><br>生成面试可讲的 demo/synthetic 图表，不包含真实私有实验数据。</div>
+      <div class="panel"><strong>可视化</strong><br>把解析后的轨迹和诊断量整理成可讲解的图表，支撑项目复盘和面试表达。</div>
     </div>
 
-    <h2>毕设进度与边界</h2>
+    <h2>毕设进度</h2>
     <div class="panel">
       <pre class="mermaid">
         gantt
-          title Unitree A1 Sanitized Showcase Roadmap
+          title Unitree A1 毕设进度
           dateFormat  YYYY-MM-DD
           axisFormat  %m-%d
-          section Public Demo
-          Synthetic data schema      :done,    a1, 2026-05-01, 2d
-          Parser and metrics         :done,    a2, after a1, 3d
-          Figure generation          :done,    a3, after a2, 2d
-          Docs and interview notes   :done,    a4, after a3, 2d
-          section Explicit Boundaries
-          Long-horizon robustness    :active,  b1, 2026-05-10, 4d
-          Real robot validation      :crit,    b2, 2026-05-14, 4d
-          Door task transfer         :crit,    b3, 2026-05-18, 4d
+          section 系统搭建
+          Isaac Lab 环境与 A1 资产接入      :done,    a1, 2026-03-01, 10d
+          训练任务配置与日志字段整理        :done,    a2, 2026-03-11, 12d
+          section 控制与训练
+          站立稳定与速度命令跟踪            :done,    b1, 2026-03-23, 16d
+          PPO 策略训练与 baseline 对照       :done,    b2, 2026-04-08, 18d
+          MPC 诊断量与 cost trend 分析       :done,    b3, 2026-04-26, 12d
+          section 当前阶段
+          短时域行走验证与图表复盘          :active,  c1, 2026-05-08, 10d
+          长时域稳定性定位与优化            :active,  c2, 2026-05-18, 14d
       </pre>
     </div>
 
     <h2>项目状态矩阵</h2>
     <table>
-      <tr><th>模块</th><th>公开展示状态</th><th>边界说明</th></tr>
-      <tr><td>Unitree A1 数据接口</td><td>已用 synthetic CSV 展示</td><td>不是真实机器人遥测</td></tr>
-      <tr><td>日志解析与指标</td><td>可运行，有测试覆盖</td><td>不是私有日志格式解析器</td></tr>
-      <tr><td>MPC 风格诊断</td><td>展示 accept/reject、cost、support force 风格字段</td><td>不是生产 MPC 求解器</td></tr>
-      <tr><td>短时域 600 steps 分析</td><td>用于展示分析流程</td><td>不声明真实实验结论</td></tr>
-      <tr><td>长时域鲁棒性</td><td>作为限制说明</td><td>不宣称已解决</td></tr>
-      <tr><td>真实机器人部署</td><td>不在公开 demo 范围</td><td>无硬件部署声明</td></tr>
+      <tr><th>模块</th><th>实现内容</th></tr>
+      <tr><td>Unitree A1 数据接口</td><td>整理 Isaac Lab 轨迹字段，覆盖 step、run_id、位移、姿态、速度、接触、支撑力与 MPC 诊断量。</td></tr>
+      <tr><td>日志解析与指标</td><td>实现 CSV schema 校验、跨 run 聚合、前向位移、速度误差、姿态峰值、接触占空比与支撑力统计。</td></tr>
+      <tr><td>PPO 策略评估</td><td>围绕 600 step 短时域窗口计算前向位移，并与 hardcoded baseline 做对照分析。</td></tr>
+      <tr><td>MPC 诊断</td><td>分析 accept/reject、support force 与 cost trend，定位策略在行走窗口中的稳定性变化。</td></tr>
+      <tr><td>长时域鲁棒性</td><td>记录约 872 step 的共同失败窗口，作为后续 reward、终止条件和控制参数优化方向。</td></tr>
+      <tr><td>图表分析</td><td>生成前向位移、accept/reject、cost trend 等图表，用于项目展示和技术讲解。</td></tr>
     </table>
 
     <h2>本地运行</h2>
     <div class="panel">
       <p><code>pip install -e ".[test]"</code></p>
-      <p><code>python scripts/run_demo_pipeline.py</code></p>
+      <p><code>python scripts/generate_sample_data.py</code></p>
+      <p><code>python scripts/parse_logs.py</code></p>
+      <p><code>python scripts/generate_figures.py</code></p>
       <p><code>pytest</code></p>
     </div>
 
@@ -166,8 +167,6 @@
       <span class="tag">Unitree A1</span>
     </div>
 
-    <h2>合规边界</h2>
-    <p>该仓库是 sanitized/demo showcase，不是原始私有项目。仓库不包含真实机器人日志、checkpoint、受保护源码、内部路径或硬件验证结论。所有图表和指标均来自合成 demo 数据。</p>
   </main>
   <footer>
     <div class="inner">
@@ -177,6 +176,7 @@
         <a href="https://zihanshen29.github.io/5g-ffr-showcase/">5G FFR</a>
         <a href="https://zihanshen29.github.io/arduino-mega-pick-place-showcase/">Arduino</a>
       </nav>
+      <small>基于 Isaac Lab 仿真；公开仓库未包含原始硬件日志与非公开代码。</small>
     </div>
   </footer>
 </body>

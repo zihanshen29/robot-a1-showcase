@@ -44,18 +44,17 @@ SUPPORT_FORCE_COLUMNS = [
 CONTACT_COLUMNS = ["contact_fl", "contact_fr", "contact_rl", "contact_rr"]
 
 FIGURE_FILENAMES = [
-    "demo_600_step_forward_displacement.png",
-    "demo_base_height.png",
-    "demo_roll_pitch.png",
-    "demo_mpc_accept_reject.png",
-    "demo_predicted_support_force.png",
-    "demo_cost_trend.png",
-    "demo_velocity_tracking.png",
-    "demo_metrics_summary.png",
+    "a1_600_step_forward_displacement.png",
+    "a1_base_height.png",
+    "a1_roll_pitch.png",
+    "a1_mpc_accept_reject.png",
+    "a1_predicted_support_force.png",
+    "a1_cost_trend.png",
+    "a1_velocity_tracking.png",
+    "a1_metrics_summary.png",
 ]
 
 
 def repo_root_from_file(path: str | Path) -> Path:
     """Return the repository root from a file inside this src-layout project."""
     return Path(path).resolve().parents[2]
-

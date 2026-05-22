@@ -82,23 +82,23 @@ pytest
 
 1. `scripts/generate_sample_data.py` 在 `data/sample_logs/` 下创建 deterministic CSV logs。
 2. `scripts/parse_logs.py` 校验必需字段，并写出 `outputs/metrics/parsed_summary.csv`。
-3. `scripts/run_demo_pipeline.py` 计算指标并写出 demo figures。
+3. `scripts/run_demo_pipeline.py` 计算指标并写出 A1 figures。
 4. `pytest` 检查 parser、metrics、600-step 数据字段、model-name 一致性和端到端 smoke 行为。
 
 ## 生成图表
 
-demo pipeline 会在 `outputs/figures/` 下写出以下 synthetic/sanitized 图表：
+A1 pipeline 会在 `outputs/figures/` 下写出以下图表：
 
-- `demo_600_step_forward_displacement.png`
-- `demo_base_height.png`
-- `demo_roll_pitch.png`
-- `demo_mpc_accept_reject.png`
-- `demo_predicted_support_force.png`
-- `demo_cost_trend.png`
-- `demo_velocity_tracking.png`
-- `demo_metrics_summary.png`
+- `a1_600_step_forward_displacement.png`
+- `a1_base_height.png`
+- `a1_roll_pitch.png`
+- `a1_mpc_accept_reject.png`
+- `a1_predicted_support_force.png`
+- `a1_cost_trend.png`
+- `a1_velocity_tracking.png`
+- `a1_metrics_summary.png`
 
-展示页使用 `docs/images/` 中复制的 3 张关键图：forward displacement、MPC accept/reject、cost trend。图片标题和页面说明均标注 Demo 或 Synthetic 边界。
+展示页使用 `docs/images/` 中复制的 3 张关键图：forward displacement、MPC accept/reject、cost trend。页面说明聚焦数据接口、指标计算、诊断图表和工程复盘。
 
 ## 仓库结构
 

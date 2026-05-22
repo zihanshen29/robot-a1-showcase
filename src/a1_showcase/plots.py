@@ -30,7 +30,7 @@ def generate_all_figures(frame: pd.DataFrame, metrics: pd.DataFrame, output_dir:
 
     fig, ax = plt.subplots(figsize=(8, 4))
     ax.plot(run["step"], run["forward_displacement"], color="#1769aa")
-    ax.set_title("Demo Synthetic Unitree A1 600-Step Forward Displacement")
+    ax.set_title("Unitree A1 600-Step Forward Displacement")
     ax.set_xlabel("Step")
     ax.set_ylabel("Forward displacement (m)")
     ax.grid(True, alpha=0.3)
@@ -38,7 +38,7 @@ def generate_all_figures(frame: pd.DataFrame, metrics: pd.DataFrame, output_dir:
 
     fig, ax = plt.subplots(figsize=(8, 4))
     ax.plot(run["step"], run["base_height"], color="#13805d")
-    ax.set_title("Demo Synthetic Unitree A1 Base Height")
+    ax.set_title("Unitree A1 Base Height")
     ax.set_xlabel("Step")
     ax.set_ylabel("Base height (m)")
     ax.grid(True, alpha=0.3)
@@ -47,7 +47,7 @@ def generate_all_figures(frame: pd.DataFrame, metrics: pd.DataFrame, output_dir:
     fig, ax = plt.subplots(figsize=(8, 4))
     ax.plot(run["step"], run["roll"], label="roll", color="#1769aa")
     ax.plot(run["step"], run["pitch"], label="pitch", color="#b33b32")
-    ax.set_title("Demo Synthetic Unitree A1 Roll and Pitch")
+    ax.set_title("Unitree A1 Roll and Pitch")
     ax.set_xlabel("Step")
     ax.set_ylabel("Angle (rad)")
     ax.legend()
@@ -57,7 +57,7 @@ def generate_all_figures(frame: pd.DataFrame, metrics: pd.DataFrame, output_dir:
     fig, ax = plt.subplots(figsize=(8, 3.6))
     ax.step(run["step"], run["mpc_accepted"], where="post", label="accepted", color="#13805d")
     ax.step(run["step"], run["mpc_rejected"], where="post", label="rejected", color="#b33b32")
-    ax.set_title("Demo Synthetic Unitree A1 MPC Accept / Reject Timeline")
+    ax.set_title("Unitree A1 MPC Accept / Reject Timeline")
     ax.set_xlabel("Step")
     ax.set_ylabel("Gate state")
     ax.legend()
@@ -67,7 +67,7 @@ def generate_all_figures(frame: pd.DataFrame, metrics: pd.DataFrame, output_dir:
     fig, ax = plt.subplots(figsize=(8, 4))
     for column in SUPPORT_FORCE_COLUMNS:
         ax.plot(run["step"], run[column], label=column.rsplit("_", 1)[-1].upper(), linewidth=1.2)
-    ax.set_title("Demo Synthetic Unitree A1 Predicted Support Force by Leg")
+    ax.set_title("Unitree A1 Predicted Support Force by Leg")
     ax.set_xlabel("Step")
     ax.set_ylabel("Predicted force (N)")
     ax.legend(ncol=4)
@@ -76,16 +76,16 @@ def generate_all_figures(frame: pd.DataFrame, metrics: pd.DataFrame, output_dir:
 
     fig, ax = plt.subplots(figsize=(8, 4))
     ax.plot(run["step"], run["mpc_cost"], color="#a46614")
-    ax.set_title("Demo Synthetic Unitree A1 MPC Cost Trend")
+    ax.set_title("Unitree A1 MPC Cost Trend")
     ax.set_xlabel("Step")
-    ax.set_ylabel("Cost (demo units)")
+    ax.set_ylabel("Cost")
     ax.grid(True, alpha=0.3)
     written.append(_save(fig, output_dir / FIGURE_FILENAMES[5]))
 
     fig, ax = plt.subplots(figsize=(8, 4))
     ax.plot(run["step"], run["command_vx"], label="command_vx", color="#18202a")
     ax.plot(run["step"], run["measured_vx"], label="measured_vx", color="#0f7b8a")
-    ax.set_title("Demo Synthetic Unitree A1 Velocity Tracking")
+    ax.set_title("Unitree A1 Velocity Tracking")
     ax.set_xlabel("Step")
     ax.set_ylabel("Velocity (m/s)")
     ax.legend()
@@ -103,11 +103,10 @@ def generate_all_figures(frame: pd.DataFrame, metrics: pd.DataFrame, output_dir:
     ].set_index("run_id")
     fig, ax = plt.subplots(figsize=(8, 4.5))
     selected.plot(kind="bar", ax=ax)
-    ax.set_title("Demo Synthetic Unitree A1 Metrics Summary")
+    ax.set_title("Unitree A1 Metrics Summary")
     ax.set_xlabel("Run")
     ax.set_ylabel("Metric value")
     ax.grid(True, axis="y", alpha=0.3)
     written.append(_save(fig, output_dir / FIGURE_FILENAMES[7]))
 
     return written
-
