@@ -61,7 +61,7 @@ Windows PowerShell:
 ```powershell
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
-pip install -r requirements.txt
+pip install -e ".[test]"
 python scripts\generate_sample_data.py
 python scripts\run_demo_pipeline.py
 pytest
@@ -72,7 +72,7 @@ Linux/macOS:
 ```bash
 python -m venv .venv
 source .venv/bin/activate
-pip install -r requirements.txt
+pip install -e ".[test]"
 python scripts/generate_sample_data.py
 python scripts/run_demo_pipeline.py
 pytest

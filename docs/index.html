@@ -70,6 +70,7 @@
         <span><strong>作者：</strong>沈子涵</span>
         <a href="mailto:2072475827@qq.com"><strong>邮箱：</strong>2072475827@qq.com</a>
         <a href="https://zihanshen29.github.io/"><strong>作品集主页：</strong>zihanshen29.github.io</a>
+        <a href="https://github.com/zihanshen29"><strong>GitHub profile:</strong>zihanshen29</a>
         <span><strong>简历：</strong>请见作品集主页</span>
       </div>
       <div class="actions">
@@ -120,19 +121,19 @@
     <h2>毕设进度与边界</h2>
     <div class="panel">
       <pre class="mermaid">
-gantt
-    title Unitree A1 Sanitized Showcase Roadmap
-    dateFormat  YYYY-MM-DD
-    axisFormat  %m-%d
-    section Public Demo
-    Synthetic data schema      :done,    a1, 2026-05-01, 2d
-    Parser and metrics         :done,    a2, after a1, 3d
-    Figure generation          :done,    a3, after a2, 2d
-    Docs and interview notes   :done,    a4, after a3, 2d
-    section Explicit Boundaries
-    Long-horizon robustness    :active,  b1, 2026-05-10, 4d
-    Real robot validation      :crit,    b2, 2026-05-14, 4d
-    Door task transfer         :crit,    b3, 2026-05-18, 4d
+        gantt
+          title Unitree A1 Sanitized Showcase Roadmap
+          dateFormat  YYYY-MM-DD
+          axisFormat  %m-%d
+          section Public Demo
+          Synthetic data schema      :done,    a1, 2026-05-01, 2d
+          Parser and metrics         :done,    a2, after a1, 3d
+          Figure generation          :done,    a3, after a2, 2d
+          Docs and interview notes   :done,    a4, after a3, 2d
+          section Explicit Boundaries
+          Long-horizon robustness    :active,  b1, 2026-05-10, 4d
+          Real robot validation      :crit,    b2, 2026-05-14, 4d
+          Door task transfer         :crit,    b3, 2026-05-18, 4d
       </pre>
     </div>
 
@@ -149,7 +150,7 @@ gantt
 
     <h2>本地运行</h2>
     <div class="panel">
-      <p><code>pip install -r requirements.txt</code></p>
+      <p><code>pip install -e ".[test]"</code></p>
       <p><code>python scripts/run_demo_pipeline.py</code></p>
       <p><code>pytest</code></p>
     </div>
