@@ -77,6 +77,8 @@
         <a class="button" href="https://github.com/zihanshen29/robot-a1-showcase">查看 GitHub 仓库</a>
         <a class="button" href="https://github.com/zihanshen29/robot-a1-showcase/blob/main/docs/project_overview.md">项目说明</a>
         <a class="button" href="https://github.com/zihanshen29/robot-a1-showcase/blob/main/docs/interview_talking_points.md">面试讲解稿</a>
+        <a class="button" href="./a1_interview_core_concepts_zh.html">核心概念</a>
+        <a class="button" href="./a1_interview_all_questions_zh.html">面试问题</a>
       </div>
     </section>
 
@@ -86,8 +88,21 @@
       <div class="metric"><strong>600 steps</strong><span>短时域验证窗口</span></div>
       <div class="metric"><strong>+0.9338 m</strong><span>PPO 策略 600 step 前向位移</span></div>
       <div class="metric"><strong>+0.9339 m</strong><span>Hardcoded baseline 对照位移</span></div>
+      <div class="metric"><strong>+0.7915 m</strong><span>MPC defaults 参数对照位移</span></div>
       <div class="metric"><strong>~872 step</strong><span>长时域共同失败窗口（后续优化方向）</span></div>
+      <div class="metric"><strong>16 次</strong><span>训练系统排错；关键发现 mpc_rate_div 6→1</span></div>
     </div>
+
+    <h2>已核实毕设指标</h2>
+    <table>
+      <tr><th>项目</th><th>核实口径</th></tr>
+      <tr><td>600 步 corrected replay</td><td>PPO（model_298.pt）+0.9338 m；hardcoded diagonal-trot baseline +0.9339 m；MPC defaults +0.7915 m。</td></tr>
+      <tr><td>1200 步压力测试</td><td>策略与基线均在约 872 步失败，指向共享控制栈问题，而不是单纯 RL 问题。</td></tr>
+      <tr><td>量化根因链</td><td>yaw 漂移约 0.9°/步且无锚 → CoM 沿 FL→RR 投影漂移（corr=0.98）→ roll/pitch 恢复退化 → FR frictionCone 成本爆炸 → solver 拒绝。</td></tr>
+      <tr><td>yaw-anchor 实验</td><td>单次实验存活 1199 步，但 accept 仅 164/1199，因此判为失败分支：活得久不等于活得好。</td></tr>
+      <tr><td>工程规模</td><td>约 2,500 行自定义代码；80+ 分析脚本 / 112 个 CSV / 50+ 份文档。</td></tr>
+    </table>
+    <p class="subtitle">以上为毕设实测指标的文字引用；本页面图表仍来自公开仓库的 synthetic demo artifacts，不与实测数字混作同一数据源。</p>
 
     <h2>展示图表</h2>
     <div class="figure-grid">
@@ -122,17 +137,17 @@
         gantt
           title Unitree A1 毕设进度
           dateFormat  YYYY-MM-DD
-          axisFormat  %m-%d
+          axisFormat  %Y-%m
           section 系统搭建
-          Isaac Lab 环境与 A1 资产接入      :done,    a1, 2026-03-01, 10d
-          训练任务配置与日志字段整理        :done,    a2, 2026-03-11, 12d
+          Isaac Lab 环境与 A1 任务搭建      :done,    a1, 2025-11-01, 2025-12-15
+          Windows↔WSL2 TCP bridge           :done,    a2, 2025-12-01, 2026-01-15
           section 控制与训练
-          站立稳定与速度命令跟踪            :done,    b1, 2026-03-23, 16d
-          PPO 策略训练与 baseline 对照       :done,    b2, 2026-04-08, 18d
-          MPC 诊断量与 cost trend 分析       :done,    b3, 2026-04-26, 12d
-          section 当前阶段
-          短时域行走验证与图表复盘          :active,  c1, 2026-05-08, 10d
-          长时域稳定性定位与优化            :active,  c2, 2026-05-18, 14d
+          站立控制与 gated handoff          :done,    a3, 2026-01-01, 2026-02-10
+          diagonal-trot prior + PPO 残差训练 :done,    a4, 2026-02-01, 2026-03-20
+          16 次训练系统排错                  :done,    a5, 2026-02-15, 2026-04-05
+          section 毕设验证
+          600 步 corrected replay 对照       :done,    a6, 2026-03-20, 2026-04-10
+          1200 步压力测试与失败机制定位      :done,    a7, 2026-04-01, 2026-04-13
       </pre>
     </div>
 
@@ -143,7 +158,7 @@
       <tr><td>日志解析与指标</td><td>实现 CSV schema 校验、跨 run 聚合、前向位移、速度误差、姿态峰值、接触占空比与支撑力统计。</td></tr>
       <tr><td>PPO 策略评估</td><td>围绕 600 step 短时域窗口计算前向位移，并与 hardcoded baseline 做对照分析。</td></tr>
       <tr><td>MPC 诊断</td><td>分析 accept/reject、support force 与 cost trend，定位策略在行走窗口中的稳定性变化。</td></tr>
-      <tr><td>长时域鲁棒性</td><td>记录约 872 step 的共同失败窗口，作为后续 reward、终止条件和控制参数优化方向。</td></tr>
+      <tr><td>长时域鲁棒性</td><td>记录约 872 step 的共同失败窗口，定位 yaw 漂移、CoM 投影漂移、姿态恢复退化与 frictionCone 成本爆炸链条。</td></tr>
       <tr><td>图表分析</td><td>生成前向位移、accept/reject、cost trend 等图表，用于项目展示和技术讲解。</td></tr>
     </table>
 
@@ -176,7 +191,7 @@
         <a href="https://zihanshen29.github.io/5g-ffr-showcase/">5G FFR</a>
         <a href="https://zihanshen29.github.io/arduino-mega-pick-place-showcase/">Arduino</a>
       </nav>
-      <small>基于 Isaac Lab 仿真；公开仓库未包含原始硬件日志与非公开代码。</small>
+      <small>基于 Isaac Lab 仿真；公开仓库未包含原始硬件日志与非公开代码。最近更新：2026-07。</small>
     </div>
   </footer>
 </body>

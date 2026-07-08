@@ -29,6 +29,22 @@ https://zihanshen29.github.io/robot-a1-showcase/
 
 展示页包含候选人信息、关键 synthetic/demo 指标卡片、3 张主要图表、毕设进度 Mermaid Gantt、GitHub 文档链接和统一 Showcase Series footer。
 
+## Verified project metrics (thesis scope)
+
+以下为毕设实测指标的文字引用；本仓库生成的 CSV、JSON 和图表仍为 synthetic demo artifacts，不与这些实测数字混作同一数据源。
+
+| Metric | Verified thesis-scope value |
+| --- | --- |
+| 600-step corrected replay | PPO `model_298.pt` +0.9338 m; hardcoded diagonal-trot baseline +0.9339 m; MPC defaults +0.7915 m |
+| 1200-step pressure test | Policy and baseline both failed around 872 steps, pointing to a shared control-stack issue rather than a pure RL issue |
+| Root-cause chain | yaw drift about 0.9 deg/step without anchor -> CoM projection drift along FL-to-RR support line (corr=0.98) -> roll/pitch recovery degradation -> FR frictionCone cost spike -> solver rejection -> fall |
+| Yaw-anchor experiment | Survived 1199 steps, but accept was only 164/1199, so it was treated as a failed branch: longer survival did not mean healthier control |
+| Debugging scale | 16 training-system debugging iterations; key finding: `mpc_rate_div` from 6 to 1 |
+| Implementation scale | About 2,500 lines of custom code; 80+ analysis scripts; 112 CSV files; 50+ documents |
+| Control setup | 50 Hz control, 0.005 s physics step, 54-D observation with MPC health, 5-D gait action, 35-step MPC contact preview of about 0.7 s, Windows-to-WSL2 TCP bridge, Crocoddyl FDDP |
+
+口径纪律：600 steps 是短时域验证，1200 steps 是压力测试；不能把该结果表述为通用四足行走已解决，也不能暗示实机部署。
+
 ## 架构
 
 ```mermaid
@@ -113,6 +129,8 @@ robot-a1-showcase/
 |-- docs/
 |   |-- images/
 |   |-- architecture.md
+|   |-- a1_interview_all_questions_zh.html
+|   |-- a1_interview_core_concepts_zh.html
 |   |-- index.html
 |   |-- interview_talking_points.md
 |   |-- limitations_and_ethics.md
@@ -128,11 +146,12 @@ robot-a1-showcase/
 
 - 我把一个不适合直接公开的 Unitree A1 仿真控制项目，整理成了可运行、可测试、可解释的公开 showcase。
 - 核心工程链路是：生成或接收日志，校验字段，计算指标，可视化诊断，并用测试保护流程。
-- 600-step 图表便于快速检查 tracking、base-height、support-force、cost 和 accept/reject 行为。
+- 600-step 图表便于快速检查 tracking、base-height、support-force、cost 和 accept/reject 行为；毕设实测口径中 PPO 为 +0.9338 m，hardcoded baseline 为 +0.9339 m。
 - MPC accept/reject 与 predicted support-force 图能把高层 gait intent 和 feasibility-style diagnostics 联系起来。
+- 1200-step pressure test 的关键结论是约 872 step 共同失败窗口，后续优化方向在共享控制栈与 MPC 侧，而不是简单归因 RL。
 - 项目对边界保持诚实：长时域鲁棒性、真实机器人验证和开门任务迁移都没有在这个公开 demo 中宣称完成。
 - 如果未来有可公开的 Unitree A1 或仿真器日志，可以在脱敏审查后复用同一 parser contract 接入。
 
 ## 限制与合规
 
-本仓库避免不受支持的性能声明，不把 synthetic metrics 包装成真实实验，不包含非公开实现细节，也不暗示真实机器人部署。目标是展示工程判断、分析结构、可复现性和沟通质量，同时保护源项目。
+本仓库避免不受支持的性能声明，不把 synthetic metrics 包装成真实实验，不包含非公开实现细节，也不暗示实机部署。目标是展示工程判断、分析结构、可复现性和沟通质量，同时保护源项目。

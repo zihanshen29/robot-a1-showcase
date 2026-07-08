@@ -1,38 +1,62 @@
-# Interview Talking Points
+# Unitree A1 面试讲解稿
 
-## 30-Second Version
+## 30 秒版
 
-This is a sanitized Unitree A1 showcase repository. I made it to demonstrate how I structure robotics simulation-control work without publishing non-public code or raw logs. It includes deterministic demo data, a validated parser, metrics, plots, tests, and documentation. The numbers and figures are synthetic, so the value is the engineering pipeline and communication, not a claim of real robot performance.
+我做的是 Unitree A1 四足机器人仿真控制毕设：在 Isaac Lab 中搭建 A1 仿真环境，把站立控制、gated handoff、PPO 步态策略、Crocoddyl FDDP 风格 MPC、accept/reject 门控和日志诊断接成一条链路。600 步 corrected replay 中，PPO 策略达到 +0.9338 m，接近硬编码 diagonal-trot baseline 的 +0.9339 m；1200 步压力测试中，我定位到约 872 步共同失败窗口，判断主要瓶颈在共享控制栈而不是单纯 RL。
 
-## 2-Minute Version
+## 2 分钟版
 
-The repository presents a clean version of a Unitree A1 simulation-control analysis workflow. The code generates 600-step synthetic runs with base motion, velocity tracking, simplified contact indicators, MPC accept/reject states, predicted support-force values, and cost trends. The parser validates the schema, the metrics module calculates interpretable summaries, and the plotting module creates figures that can be used in an interview walkthrough.
+这个项目的价值不在于“跑一个 PPO”，而在于把 RL、MPC、仿真器、跨平台通信和诊断闭环接成可解释系统。PPO 不直接输出 12 维关节力矩，而是输出 5 维步态动作：4 个接触通道和 1 个时序通道；MPC 接收 35 步接触序列，预览约 0.7 s 未来，并输出当前控制量。这样牺牲一部分自由度，换来可调试性和安全边界。
 
-I deliberately separated what is shown from what is not shown. This is not the original codebase and it does not include real logs, checkpoints, Isaac integration, ROS messages, or Unitree SDK calls. It is a public-safe artifact that demonstrates how I break down a robotics project into data contracts, diagnostics, reproducible scripts, figures, and tests.
+工程上，我做了站立启动和 gated handoff，确保基础高度、姿态、角速度和关节速度满足条件后才切到行走；也做了 corrected replay，避免 train/play 语义不一致导致模型排序失真。最终短时域 600 步结果是 PPO +0.9338 m，hardcoded baseline +0.9339 m，MPC defaults +0.7915 m。长时域 1200 步压力测试中，策略和基线都在约 872 步失败，所以我没有继续盲调 PPO，而是把问题定位到共享控制栈、yaw 漂移和 MPC 恢复链条。
 
-## Technical Q&A
+## 四个 Storyline
 
-**Why not open the original project directly?**
+### Story 1：开局摔倒 -> 站立控制 + gated handoff
 
-Because robotics projects often include non-public code, raw logs, environment-specific paths, and collaborator context. A sanitized showcase is a better way to communicate engineering work while respecting confidentiality.
+早期训练里机器人经常在开始阶段直接失稳。我的判断是初始姿态还没稳定，行走逻辑太早接管。修改方式是先用站立控制器把初始姿态固定在可控范围内，再用基础高度、姿态角、角速度和关节速度等条件作为 handoff gate，条件连续满足后才允许切到行走。这个改动让后续训练建立在稳定启动序列上。
 
-**How do you keep the showcase credible without leaking source details?**
+### Story 2：16 次训练系统排错 -> `mpc_rate_div 6->1`
 
-The repository makes its boundary explicit. It provides runnable code, tests, and synthetic data with clear labels. It avoids raw logs and unsupported claims, while still showing parser design, metrics, diagnostics, and plotting quality.
+残差 RL 转入行走后，我连续做了 16 次训练系统排错，每次只处理一个明确问题：warmup residual leak、train/play 不一致、接受门控、接触锁定、时序收窄和课程学习等。关键发现不是某个单点，而是 MPC 求解调度和步态相位的关系：把 `mpc_rate_div` 从 6 改到 1，即每个控制步都重解 MPC，而不是每 6 步解一次，是决定性转折。这个故事体现的是系统性排错：不是盲试参数，而是用对照实验找到主导变量。
 
-**Why choose 600-step figures?**
+### Story 3：train/play 不一致 -> corrected replay
 
-Six hundred steps are long enough to show short-horizon tracking, base-height variation, roll/pitch behavior, MPC accept/reject patterns, predicted support-force changes, and cost trends. They are also compact enough for a reviewer to inspect quickly.
+按训练表现选出的 checkpoint，在回放时排序会变。我的判断是训练与回放环境语义不一致，先前的评估本身不可靠。因此我统一 corrected replay path，重新评估 checkpoint，确认 `model_298.pt` 是可信的短时域最优，600 步为 +0.9338 m。这个故事的面试重点是：先保证评估是对的，再谈模型好坏。
 
-**What do MPC accept/reject, predicted support force, and cost trend explain?**
+### Story 4：约 872 步共同失败窗口 -> 量化根因链
 
-Accept/reject states show whether a candidate controller output would be considered usable by a feasibility gate. Predicted support force gives a leg-level diagnostic for contact phases. Cost trend gives a compact signal for whether the simplified optimization-style objective is improving, flat, or deteriorating in the demo sequence.
+1200 步压力测试里，PPO 策略和硬编码 baseline 都在约 872 步失败。因为没有学习的 baseline 也失败，我判断问题不应简单归因到 PPO，而在共享控制栈。我围绕失败窗口记录 solver success、feasible-only、cost、接触力、姿态和 reset 步数，做离线分析，定位到：
 
-**How would this extend to real Unitree A1 or simulator logs?**
+`yaw 漂移约 0.9 deg/步且无锚 -> CoM 沿 FL->RR 投影漂移（corr=0.98）-> roll/pitch 恢复退化 -> FR frictionCone 成本爆炸 -> solver 拒绝 -> 摔倒`。
 
-I would add an adapter that converts public-approved logs into the same CSV schema, then run the existing validation, metrics, and plots. The adapter would be reviewed separately to avoid publishing raw internal formats or environment details.
+验证性实验里，yaw-anchor 单次实验存活到 1199 步，但 accept 只有 164/1199，所以我判定为失败分支。面试可以强调这句话：活得久不等于活得好，接受率崩掉的存活没有意义。
 
-**What capabilities does this project demonstrate?**
+## 600 vs 1200 口径纪律
 
-It demonstrates robotics data-contract design, reproducible analysis, diagnostic plotting, metric selection, boundary-setting, Python packaging, testing, and interview communication.
+- 600 steps：短时域验证窗口，用来对比 PPO、hardcoded baseline 和 MPC defaults。
+- 1200 steps：压力测试窗口，用来观察长时域失败机制。
+- 不能把 600 步结果说成长期鲁棒，也不能把 1200 步失败说成 PPO 一定失败；共同失败窗口更指向共享控制栈。
+- 公开 showcase 的图表仍是 synthetic demo；毕设实测指标只以文字引用。
 
+## 毕设 vs 毕设后
+
+简历和面试主线保持毕设口径：短时域仿真行走验证 + 长时域失败机制定位。毕设后进展只作为可选补充，不混进同一张 Gantt 或主结果里。
+
+可选 30 秒补充：
+
+> 基于长时域失败诊断，我后续转向 model-free 路线并跑通鲁棒 walker，nominal/push 存活率达到 1.00；同时推进 GPU 批量化 SRBD 简化控制器重设计，4096 环境批量求解延迟可行。转向原因是外置 socket MPC 是多环境训练的扩展瓶颈。
+
+## 压力追问回答
+
+**PPO 没明显超过 baseline，为什么还有价值？**  
+600 步短时域里 hardcoded diagonal-trot prior 本身很强，PPO 接近 baseline 说明它没有破坏结构化先验，并且 RL+MPC 链路可运行。项目价值在于系统搭建、评估校准和失败定位，不是包装成 RL 大幅超越 baseline。
+
+**约 872 步失败是不是项目失败？**  
+不是。600 步是验证目标，1200 步是压力测试。压力测试暴露共同失败窗口，反而帮助我把后续优化方向从继续盲调 RL 改到 MPC/yaw/接触恢复链条。
+
+**公开仓库为什么都是 demo 数据？**  
+因为原项目包含非公开代码、日志、checkpoint 和环境配置，不能直接公开。公开仓库的作用是展示数据契约、日志解析、指标计算、图表生成和测试流程；真实毕设指标在 README 中以文字引用，并明确与 synthetic demo 图表分开。
+
+**你的真实贡献是什么？**  
+我负责把仿真环境、RL 策略、MPC 求解、TCP bridge、handoff gate、接受门控和日志诊断接成闭环；并通过 16 次训练排错、corrected replay 和 872 步失败窗口分析，定位系统级问题。
