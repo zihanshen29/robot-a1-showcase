@@ -45,6 +45,7 @@
     .figure-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; }
     .figure-card { padding: 12px; }
     .figure-card p { margin: 8px 0 0; color: var(--muted); font-size: 14px; }
+    video { display: block; width: 100%; border: 1px solid var(--line); border-radius: 8px; background: #000; }
     .tagrow { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
     .tag { background: #eef3f8; border: 1px solid var(--line); border-radius: 999px; padding: 6px 10px; color: #334155; }
     table { width: 100%; border-collapse: collapse; background: #fff; }
@@ -94,15 +95,35 @@
     </div>
 
     <h2>已核实毕设指标</h2>
+    <h3>表 A1-1：短时域结果</h3>
     <table>
-      <tr><th>项目</th><th>核实口径</th></tr>
-      <tr><td>600 步 corrected replay</td><td>PPO（model_298.pt）+0.9338 m；hardcoded diagonal-trot baseline +0.9339 m；MPC defaults +0.7915 m。</td></tr>
-      <tr><td>1200 步压力测试</td><td>策略与基线均在约 872 步失败，指向共享控制栈问题，而不是单纯 RL 问题。</td></tr>
-      <tr><td>量化根因链</td><td>yaw 漂移约 0.9°/步且无锚 → CoM 沿 FL→RR 投影漂移（corr=0.98）→ roll/pitch 恢复退化 → FR frictionCone 成本爆炸 → solver 拒绝。</td></tr>
-      <tr><td>yaw-anchor 实验</td><td>单次实验存活 1199 步，但 accept 仅 164/1199，因此判为失败分支：活得久不等于活得好。</td></tr>
-      <tr><td>工程规模</td><td>约 2,500 行自定义代码；80+ 分析脚本 / 112 个 CSV / 50+ 份文档。</td></tr>
+      <tr><th>控制器</th><th>600 步前向位移</th><th>说明</th></tr>
+      <tr><td>PPO model_298</td><td>+0.9338 m</td><td>corrected replay</td></tr>
+      <tr><td>硬编码 diagonal-trot 基线</td><td>+0.9339 m</td><td>手写基线</td></tr>
+      <tr><td>MPC defaults</td><td>+0.7915 m</td><td>参数对照</td></tr>
+    </table>
+    <h3>表 A1-2：关键实验对照</h3>
+    <table>
+      <tr><th>实验</th><th>存活步数</th><th>关键指标</th><th>结论</th></tr>
+      <tr><td>600 步验证</td><td>600</td><td>PPO≈基线</td><td>短时域验证通过</td></tr>
+      <tr><td>1200 步压力测试</td><td>约 872</td><td>策略与基线均失败</td><td>共享控制栈问题，非单纯 RL 问题</td></tr>
+      <tr><td>yaw-anchor 单次实验</td><td>1199</td><td>accept 164/1199</td><td>判失败分支，活得久≠活得好</td></tr>
     </table>
     <p class="subtitle">以上为毕设实测指标的文字引用；本页面图表仍来自公开仓库的 synthetic demo artifacts，不与实测数字混作同一数据源。</p>
+
+    <h2>毕设仿真回放</h2>
+    <div class="figure-grid">
+      <div class="figure-card">
+        <h3>Hardcoded baseline</h3>
+        <video controls muted preload="metadata" poster="./assets/media/a1_baseline_trot_600step_poster.jpg" src="./assets/media/a1_baseline_trot_600step.mp4"></video>
+        <p>Isaac Lab simulation replay (2026-04, thesis scope) — hardcoded diagonal-trot baseline，对应表 A1-1 的 +0.9339 m。</p>
+      </div>
+      <div class="figure-card">
+        <h3>PPO policy</h3>
+        <video controls muted preload="metadata" poster="./assets/media/a1_rl_policy_600step_poster.jpg" src="./assets/media/a1_rl_policy_600step.mp4"></video>
+        <p>Isaac Lab simulation replay (2026-04, thesis scope) — PPO model_298，对应表 A1-1 的 +0.9338 m。</p>
+      </div>
+    </div>
 
     <h2>展示图表</h2>
     <div class="figure-grid">
