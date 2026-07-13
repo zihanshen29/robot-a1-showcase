@@ -1,8 +1,8 @@
 """Simplified Unitree A1 demo simulation.
 
-This module generates synthetic, sanitized state sequences for interview and
-portfolio demonstration. It is not a real Unitree A1 dynamics model and should
-not be interpreted as hardware or private-project telemetry.
+This module generates synthetic, sanitized state sequences for public engineering
+review and portfolio demonstration. It is not a real Unitree A1 dynamics model
+and should not be interpreted as hardware or private-project telemetry.
 """
 
 from __future__ import annotations
@@ -94,4 +94,3 @@ def simulate_a1_demo_run(
             "contact_rr": contact_rr,
         }
     )
-

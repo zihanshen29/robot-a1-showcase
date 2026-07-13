@@ -74,22 +74,19 @@
         <a href="https://github.com/zihanshen29"><strong>GitHub profile:</strong>zihanshen29</a>
         <a href="https://zihanshen29.github.io/resume.pdf" download><strong>简历：</strong>下载 PDF</a>
       </div>
+      <div class="notice">公开边界：页面中的 CSV、图表和 pipeline 输出为 synthetic demo artifacts；毕设数值和回放视频作为已核实文字/媒体证据单独呈现，不与公开 demo 数据混作同一来源。</div>
       <div class="actions">
         <a class="button" href="https://github.com/zihanshen29/robot-a1-showcase">查看 GitHub 仓库</a>
         <a class="button" href="https://github.com/zihanshen29/robot-a1-showcase/blob/main/docs/project_overview.md">项目说明</a>
-        <a class="button" href="https://github.com/zihanshen29/robot-a1-showcase/blob/main/docs/interview_talking_points.md">面试讲解稿</a>
-        <a class="button" href="./a1_interview_core_concepts_zh.html">核心概念</a>
-        <a class="button" href="./a1_interview_all_questions_zh.html">面试问题</a>
+        <a class="button" href="https://github.com/zihanshen29/robot-a1-showcase/blob/main/docs/architecture.md">架构说明</a>
       </div>
     </section>
 
     <h2>核心指标</h2>
     <div class="grid">
-      <div class="metric"><strong>Unitree A1</strong><span>Isaac Lab 仿真对象</span></div>
       <div class="metric"><strong>600 steps</strong><span>短时域验证窗口</span></div>
       <div class="metric"><strong>+0.9338 m</strong><span>PPO 策略 600 step 前向位移</span></div>
       <div class="metric"><strong>+0.9339 m</strong><span>Hardcoded baseline 对照位移</span></div>
-      <div class="metric"><strong>+0.7915 m</strong><span>MPC defaults 参数对照位移</span></div>
       <div class="metric"><strong>~872 step</strong><span>长时域共同失败窗口（后续优化方向）</span></div>
       <div class="metric"><strong>16 次</strong><span>训练系统排错；关键发现 mpc_rate_div 6→1</span></div>
     </div>
@@ -149,7 +146,7 @@
       <div class="panel"><strong>数据接口</strong><br>设计 600 step Unitree A1 轨迹字段，覆盖位移、姿态、速度命令、支撑力、接触状态与 MPC 诊断量。</div>
       <div class="panel"><strong>解析与校验</strong><br>对 CSV 字段做 schema 检查，缺字段时给出清晰错误。</div>
       <div class="panel"><strong>指标计算</strong><br>计算前向位移、速度跟踪误差、姿态、支撑力、接触占空比、MPC accept/reject 和 cost trend。</div>
-      <div class="panel"><strong>可视化</strong><br>把解析后的轨迹和诊断量整理成可讲解的图表，支撑项目复盘和面试表达。</div>
+      <div class="panel"><strong>可视化</strong><br>把解析后的轨迹和诊断量整理成可审阅的图表，支撑项目复盘和技术审阅。</div>
     </div>
 
     <h2>毕设进度</h2>

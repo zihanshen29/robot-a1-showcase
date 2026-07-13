@@ -8,7 +8,7 @@ flowchart LR
     C --> D["Plot Generator"]
     D --> E["Demo Figures"]
     B --> H["MPC Diagnostics Summary"]
-    E --> F["Interview Notes"]
+    E --> F["Engineering Review"]
 ```
 
 ## Module Responsibilities
@@ -32,4 +32,3 @@ flowchart LR
 | MPC gate | `mpc_accepted`, `mpc_rejected`, `mpc_cost` | Demonstrates feasibility-style diagnostics |
 | Support force | Four predicted support-force fields | Shows leg-level comparison for discussion |
 | Contacts | Four contact fields | Enables simplified duty-factor metrics |
-

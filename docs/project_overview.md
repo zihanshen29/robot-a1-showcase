@@ -1,6 +1,6 @@
 # Project Overview
 
-This repository is a sanitized Unitree A1 robotics simulation-control showcase. It is intended for interview discussion and engineering review, not for reproducing a non-public source project.
+This repository is a sanitized Unitree A1 robotics simulation-control showcase. It is intended for engineering review, not for reproducing a non-public source project.
 
 The code is organized around a public-safe workflow:
 

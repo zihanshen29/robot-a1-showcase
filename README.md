@@ -1,12 +1,14 @@
 # Unitree A1 仿真控制公开展示
 
+[![CI](https://github.com/zihanshen29/robot-a1-showcase/actions/workflows/ci.yml/badge.svg)](https://github.com/zihanshen29/robot-a1-showcase/actions/workflows/ci.yml)
+
 这是一个面向作品集和中文岗位投递的 sanitized showcase 仓库，用 Unitree A1 主题的合成数据展示机器人仿真控制项目的工程表达方式：日志生成、字段校验、指标计算、MPC 风格诊断、图表生成、测试和对外说明。
 
 所有 CSV、指标和图表均为 synthetic demo artifacts。它们用于说明可复现分析流程，不代表真实硬件性能，不披露原始非公开项目代码或数据。
 
 ## English Summary
 
-This is a sanitized, runnable Unitree A1 robotics simulation-control showcase. It demonstrates synthetic log generation, parser validation, metrics, MPC-style diagnostics, plotting, tests, and interview-ready documentation. The repository does not claim real hardware results and does not include non-public source code, raw logs, checkpoints, SDK integrations, credentials, or internal paths.
+This is a sanitized, runnable Unitree A1 robotics simulation-control showcase. It demonstrates synthetic log generation, parser validation, metrics, MPC-style diagnostics, plotting, tests, and engineering documentation. The repository does not claim real hardware results and does not include non-public source code, raw logs, checkpoints, SDK integrations, credentials, or internal paths.
 
 ## 这个仓库是什么
 
@@ -14,7 +16,7 @@ This is a sanitized, runnable Unitree A1 robotics simulation-control showcase. I
 - 一套 deterministic synthetic Unitree A1 600-step demo logs。
 - 一个带 schema 校验的 CSV parser，缺字段时会给出明确错误。
 - 一组 demo metrics：前向位移、速度跟踪误差、base height、姿态、MPC accept/reject、predicted support force、cost trend、contact duty factor 和运行时长。
-- 一套可复现图表，适合面试或作品集讲解。
+- 一套可复现图表，用于工程复盘与技术审阅。
 - 一组测试，覆盖 parser、metrics、pipeline smoke、600-step 字段和 model name 一致性。
 
 ## 这个仓库不是什么
@@ -97,7 +99,7 @@ flowchart LR
     C --> D["Plot Generator"]
     D --> E["Demo Figures"]
     B --> H["MPC Diagnostics Summary"]
-    E --> F["Interview Notes"]
+    E --> F["Engineering Review"]
 ```
 
 ## 状态矩阵
@@ -172,10 +174,7 @@ robot-a1-showcase/
 |   |-- images/
 |   |-- assets/
 |   |-- architecture.md
-|   |-- a1_interview_all_questions_zh.html
-|   |-- a1_interview_core_concepts_zh.html
 |   |-- index.html
-|   |-- interview_talking_points.md
 |   |-- limitations_and_ethics.md
 |   `-- project_overview.md
 |-- src/
@@ -185,7 +184,7 @@ robot-a1-showcase/
 `-- outputs/
 ```
 
-## 面试讲解重点
+## 工程复盘摘要
 
 - 我把一个不适合直接公开的 Unitree A1 仿真控制项目，整理成了可运行、可测试、可解释的公开 showcase。
 - 核心工程链路是：生成或接收日志，校验字段，计算指标，可视化诊断，并用测试保护流程。
